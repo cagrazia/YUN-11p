@@ -1,4 +1,4 @@
-# YUN-11p
+# YUN-11p (please visualize this readme in row text)
 Tutorial to configure a YUN rev2 (with LEDE kernel update) and run IEEE 802.11p network
 
 #############################################################################
