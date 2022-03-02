@@ -5,11 +5,23 @@
 # sudo launchctl start com.apple.tftpd                                      #
 #                                                                           #
 # in /private/tf <tab> there are the files                                  #
+# in other words, the folder /private/tftpboot/ should contain the three    #
+# opewrt*.bin files available in this repo                                  #
 #############################################################################
 
+# if you are on another OS there is a guide to run TFTP server here:
+# https://docs.arduino.cc/tutorials/yun-rev2/YunUBootReflash
+  
 ####################
 # SERIAL INFERFACE #
 ####################
+
+# connect the YUN to your mac through USB port
+  
+# attach to serial monitor -> hard reboot button YUN -> type "and" to 
+# move into the uBOOT system (microcontroller) 
+
+# config the PC-MAC IP to 192.168.1.2
 
 setenv serverip 192.168.1.2;
 setenv ipaddr 192.168.1.1;
@@ -51,6 +63,7 @@ ssh root@192.168.1.1
 #  Insert LEDE USB  #
 #####################
 
+# the USB should contain the lede*.bin file of this repo
 
 run-sysupgrade /mnt/sda1/lede <tab>
 
@@ -75,17 +88,20 @@ df -h /
 #   GIVE INTERNET AGAIN  #
 ##########################
 
+# you can share internet to the YUN in different ways
+# here we use to connect to a known Wi-Fi (SSID, PW and IP available)
+  
 vi /etc/wpa_supplicant.conf
 
 - >
 network={
-   ssid="carlone"
-   psk="gigginowifi"
+   ssid="ThePingInTheNorth"
+   psk="WinterIsRouting"
 }
 
 wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf 
 
-ip address add 172.20.10.4/24 dev wlan0
+ip address add 172.20.10.3/24 dev wlan0
 
 ip route add default via 172.20.10.1
 
@@ -101,6 +117,9 @@ opkg install arp-scan
 opkg install ncat
 opkg install openssl-util
 
+opkg install ethtool
+opkg install usbutils
+opkg install pciutils
 
 ##################################
 #   Change BR-LAN to X network   #
@@ -108,8 +127,10 @@ opkg install openssl-util
 
 vi /etc/config/network
 
--> lan -> option ipaddr '192.168.X.1' 
-
-
-
-
+config interface 'lan'
+        option type 'bridge'
+        option ifname 'eth1'
+        option proto 'static'
+        option ipaddr '192.168.X.1'
+        option netmask '255.255.255.0'
+        option ip6assign '60'
