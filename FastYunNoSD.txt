@@ -1,0 +1,115 @@
+#############################################################################
+# SUPERQUICK ALL IN ONE (hypothesis, TFTP server running on mac.. commands: #
+#                                                                           #
+# sudo launchctl load -F /System/Library/LaunchDaemons/tftp.plist           #
+# sudo launchctl start com.apple.tftpd                                      #
+#                                                                           #
+# in /private/tf <tab> there are the files                                  #
+#############################################################################
+
+####################
+# SERIAL INFERFACE #
+####################
+
+setenv serverip 192.168.1.2;
+setenv ipaddr 192.168.1.1;
+tftp 0x80060000 openwrt-ar71xx-generic-linino-u-boot.bin;
+
+erase 0x9f000000 +0x40000;
+cp.b $fileaddr 0x9f000000 $filesize;
+erase 0x9f040000 +0x10000;
+
+tftp 0x80060000 openwrt-ar71xx-generic-yun-16M-kernel.bin;
+
+erase 0x9fEa0000 +0x140000;
+cp.b $fileaddr 0x9fea0000 $filesize;
+
+tftp 0x80060000 openwrt-ar71xx-generic-yun-16M-rootfs-squashfs.bin;
+
+erase 0x9f050000 +0xE50000;
+cp.b $fileaddr 0x9f050000 $filesize;
+
+bootm 0x9fea0000;
+
+
+####################
+#    WAIT reboot.  #
+####################
+
+ifconfig eth1 192.168.1.1
+
+
+####################
+#    ON TERMINAL   #
+####################
+
+ssh-keygen -R 192.168.1.1
+ssh root@192.168.1.1
+
+
+#####################
+#  Insert LEDE USB  #
+#####################
+
+
+run-sysupgrade /mnt/sda1/lede <tab>
+
+
+####################
+#    WAIT reboot.  #
+####################
+
+ssh-keygen -R 192.168.1.1
+ssh root@192.168.1.1
+
+##############
+#   PROVA    #
+##############
+
+df -h /
+
+
+
+##########################
+#    INSTALL EXTRA PKG   #
+#   GIVE INTERNET AGAIN  #
+##########################
+
+vi /etc/wpa_supplicant.conf
+
+- >
+network={
+   ssid="carlone"
+   psk="gigginowifi"
+}
+
+wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf 
+
+ip address add 172.20.10.4/24 dev wlan0
+
+ip route add default via 172.20.10.1
+
+vi /etc/resolv.conf 
+
+- > edit nameserver as 8.8.8.8
+
+
+opkg update
+opkg install iperf
+opkg install tcpdump
+opkg install arp-scan
+opkg install ncat
+opkg install openssl-util
+
+
+##################################
+#   Change BR-LAN to X network   #
+##################################
+
+vi /etc/config/network
+
+-> lan -> option ipaddr '192.168.X.1' 
+
+
+
+
