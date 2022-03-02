@@ -1,5 +1,9 @@
-# YUN-11p (please visualize this readme in raw text)
-Tutorial to configure a YUN rev2 (with LEDE kernel update) and run IEEE 802.11p network
+#############################################################################
+#                              YUN-11p repo                                 #
+#############################################################################
+
+Tutorial to configure a YUN rev2 (with LEDE kernel update) and run 
+IEEE 802.11p network
 
 #############################################################################
 # SUPERQUICK ALL IN ONE (hypothesis, TFTP server running on mac.. commands: #
