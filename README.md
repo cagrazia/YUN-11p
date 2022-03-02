@@ -1,30 +1,30 @@
-# YUN-11p
+YUN-11p
 Tutorial to configure a YUN rev2 (with LEDE kernel update) and run IEEE 802.11p network
 
-#############################################################################
-# SUPERQUICK ALL IN ONE (hypothesis, TFTP server running on mac.. commands: #
-#                                                                           #
-# sudo launchctl load -F /System/Library/LaunchDaemons/tftp.plist           #
-# sudo launchctl start com.apple.tftpd                                      #
-#                                                                           #
-# in /private/tf <tab> there are the files                                  #
-# in other words, the folder /private/tftpboot/ should contain the three    #
-# opewrt*.bin files available in this repo                                  #
-#############################################################################
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUPERQUICK ALL IN ONE (hypothesis, TFTP server running on mac.. commands: %
+%                                                                           %
+% sudo launchctl load -F /System/Library/LaunchDaemons/tftp.plist           %
+% sudo launchctl start com.apple.tftpd                                      %
+%                                                                           %
+% in /private/tf <tab> there are the files                                  %
+% in other words, the folder /private/tftpboot/ should contain the three    %
+% opewrt*.bin files available in this repo                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# if you are on another OS there is a guide to run TFTP server here:
-# https://docs.arduino.cc/tutorials/yun-rev2/YunUBootReflash
+% if you are on another OS there is a guide to run TFTP server here:
+% https://docs.arduino.cc/tutorials/yun-rev2/YunUBootReflash
   
-####################
-# SERIAL INFERFACE #
-####################
+%%%%%%%%%%%%%%%%%%%%
+% SER%IAL INFERFACE %
+%%%%%%%%%%%%%%%%%%%%
 
-# connect the YUN to your mac through USB port
+% connect the YUN to your mac through USB port
   
-# attach to serial monitor -> hard reboot button YUN -> type "and" to 
-# move into the uBOOT system (microcontroller) 
+% attach to serial monitor -> hard reboot button YUN -> type "and" to 
+% move into the uBOOT system (microcontroller) 
 
-# config the PC-MAC IP to 192.168.1.2
+% config the PC-MAC IP to 192.168.1.2
 
 setenv serverip 192.168.1.2;
 setenv ipaddr 192.168.1.1;
@@ -47,52 +47,52 @@ cp.b $fileaddr 0x9f050000 $filesize;
 bootm 0x9fea0000;
 
 
-####################
-#    WAIT reboot.  #
-####################
+%%%%%%%%%%%%%%%%%%%%
+%    WAIT reboot.  %
+%%%%%%%%%%%%%%%%%%%%
 
 ifconfig eth1 192.168.1.1
 
 
-####################
-#    ON TERMINAL   #
-####################
+%%%%%%%%%%%%%%%%%%%%
+%    ON TERMINAL   %
+%%%%%%%%%%%%%%%%%%%%
 
 ssh-keygen -R 192.168.1.1
 ssh root@192.168.1.1
 
 
-#####################
-#  Insert LEDE USB  #
-#####################
+%%%%%%%%%%%%%%%%%%%%%
+%  Insert LEDE USB  %
+%%%%%%%%%%%%%%%%%%%%%
 
-# the USB should contain the lede*.bin file of this repo
+% the USB should contain the lede*.bin file of this repo
 
 run-sysupgrade /mnt/sda1/lede <tab>
 
 
-####################
-#    WAIT reboot.  #
-####################
+%%%%%%%%%%%%%%%%%%%%
+%    WAIT reboot.  %
+%%%%%%%%%%%%%%%%%%%%
 
 ssh-keygen -R 192.168.1.1
 ssh root@192.168.1.1
 
-##############
-#   PROVA    #
-##############
+%%%%%%%%%%%%%%
+%   PROVA    %
+%%%%%%%%%%%%%%
 
 df -h /
 
 
 
-##########################
-#    INSTALL EXTRA PKG   #
-#   GIVE INTERNET AGAIN  #
-##########################
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    INSTALL EXTRA PKG   %
+%   GIVE INTERNET AGAIN  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# you can share internet to the YUN in different ways
-# here we use to connect to a known Wi-Fi (SSID, PW and IP available)
+% you can share internet to the YUN in different ways
+% here we use to connect to a known Wi-Fi (SSID, PW and IP available)
   
 vi /etc/wpa_supplicant.conf
 
@@ -124,9 +124,9 @@ opkg install ethtool
 opkg install usbutils
 opkg install pciutils
 
-##################################
-#   Change BR-LAN to X network   #
-##################################
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Change BR-LAN to X network   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vi /etc/config/network
 
@@ -137,4 +137,5 @@ config interface 'lan'
         option ipaddr '192.168.X.1'
         option netmask '255.255.255.0'
         option ip6assign '60'
+
 
